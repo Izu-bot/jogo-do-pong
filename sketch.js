@@ -45,8 +45,8 @@ let colidiu = false;
 
 function setup() {
     createCanvas(600, 400); // Cria um canvas com tamanho 600x400 pixels
-    trilha.loop(); // Inicia a reprodução da música de fundo (presumindo que 'trilha' seja um som pré-carregado)
-    background(150, 80, 190); // Define a cor de fundo do canvas como roxo (150, 80, 190)
+    trilha.loop(); 
+    background(150, 80, 190); // 
 
     // Desenha a linha central do campo
     stroke(255); // Define a cor do traço como branco
@@ -176,11 +176,11 @@ function incluiPlacar() {
     fill(color(255, 0, 0));
     rect(150, 10, 40, 20);
     fill(0);
-    text(meusPontos, 170, 26);
+    text(meusPontos, 200, 26);
     fill(color(255, 0, 0));
     rect(450, 10, 40, 20);
     fill(0);
-    text(pontosDoOponente, 470, 26);
+    text(pontosDoOponente, 200, 26);
 }
 
 function marcaPonto() {
@@ -233,13 +233,13 @@ function intro() {
     jogarSingle = createButton('Single Player');
     jogarSingle.position(200, 180);
     jogarSingle.size(200, 90);
-    jogarSingle.style('background-color', '#90FFF1');
+    jogarSingle.style('background-color', '#FDA7E1');
     jogarSingle.mousePressed(() => escolheModo("singleplayer"));
 
     jogarMulti = createButton('Multiplayer');
     jogarMulti.position(200, 300);
     jogarMulti.size(200, 90);
-    jogarMulti.style('background-color', '#90FFF1');
+    jogarMulti.style('background-color', '#FDA7E1');
     jogarMulti.mousePressed(() => escolheModo("multiplayer"));
 }
 
@@ -256,24 +256,24 @@ function escolhePlacar() {
     textAlign(CENTER);
     textSize(24);
     fill(0);
-    text("Escolha o placar para vencer", width / 2, 100);
+    text("Escolha o placar para vencer!", width / 2, 100);
 
     botaoPlacar3 = createButton('3 Pontos');
     botaoPlacar3.position(200, 150);
     botaoPlacar3.size(200, 60);
-    botaoPlacar3.style('background-color', '#FFCC00');
+    botaoPlacar3.style('background-color', '#AE82B8');
     botaoPlacar3.mousePressed(() => startGame(3));
 
     botaoPlacar5 = createButton('5 Pontos');
     botaoPlacar5.position(200, 220);
     botaoPlacar5.size(200, 60);
-    botaoPlacar5.style('background-color', '#FFCC00');
+    botaoPlacar5.style('background-color', '#AE82B8');
     botaoPlacar5.mousePressed(() => startGame(5));
 
     botaoPlacar10 = createButton('10 Pontos');
     botaoPlacar10.position(200, 290);
     botaoPlacar10.size(200, 60);
-    botaoPlacar10.style('background-color', '#FFCC00');
+    botaoPlacar10.style('background-color', '#AE82B8');
     botaoPlacar10.mousePressed(() => startGame(10));
 
     // Botão voltar ao menu
@@ -289,19 +289,19 @@ function escolheDificuldade() {
     botaoFacil = createButton('Fácil');
     botaoFacil.position(200, 150);
     botaoFacil.size(200, 60);
-    botaoFacil.style('background-color', '#00FF00');
+    botaoFacil.style('background-color', '#A9FFA9');
     botaoFacil.mousePressed(() => setDificuldade("facil"));
 
     botaoMedio = createButton('Médio');
     botaoMedio.position(200, 220);
     botaoMedio.size(200, 60);
-    botaoMedio.style('background-color', '#FFC107');
+    botaoMedio.style('background-color', '#FCDC7F');
     botaoMedio.mousePressed(() => setDificuldade("medio"));
 
     botaoDificil = createButton('Difícil');
     botaoDificil.position(200, 289);
     botaoDificil.size(200, 60);
-    botaoDificil.style('background-color', '#FF0000');
+    botaoDificil.style('background-color', '#FD7D7D');
     botaoDificil.mousePressed(() => setDificuldade("dificil"));
 
     // Botão voltar ao menu
@@ -332,7 +332,7 @@ function mostraBotaoVoltar() {
     voltarMenu = createButton('Voltar');
     voltarMenu.position(277, 10);
     voltarMenu.size(50, 40);
-    voltarMenu.style('background-color', '#FF5733');
+    voltarMenu.style('background-color', '#FAADFC');
     voltarMenu.mousePressed(voltarParaMenu);
 }
 
@@ -348,14 +348,14 @@ function voltarParaMenu() {
 }
 
 function incluiPlacar() {
-    stroke(255);
+    stroke(500);
     textAlign(CENTER);
     textSize(16);
-    fill(color(255, 0, 0));
+    fill(color(255, 203, 219));
     rect(150, 10, 40, 20);
     fill(0);
     text(meusPontos, 170, 26);
-    fill(color(255, 0, 0));
+    fill(color(255, 203, 219));
     rect(450, 10, 40, 20);
     fill(0);
     text(pontosDoOponente, 470, 26);
