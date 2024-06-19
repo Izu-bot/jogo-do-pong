@@ -10,6 +10,7 @@ let botaoPlacar3;
 let botaoPlacar5;
 let botaoPlacar10;
 let botaoFacil;
+let botaoMedio;
 let botaoDificil;
 
 // Variáveis da bolinha
@@ -148,12 +149,13 @@ function movimentaRaqueteOponenteMultiplayer() {
   }
 }
 
+
 function movimentaRaqueteOponenteSinglePlayer() {
   // Movimento automático do oponente no modo single player
   if (yBolinha < yRaqueteOponente + raqueteAltura / 2) {
-    yRaqueteOponente -= 6;
+    yRaqueteOponente -= 6
   } else {
-    yRaqueteOponente += 6;
+    yRaqueteOponente += 6
   }
   if (yRaqueteOponente >= 310) {
     yRaqueteOponente = 310;
@@ -162,6 +164,7 @@ function movimentaRaqueteOponenteSinglePlayer() {
     yRaqueteOponente = 0;
   }
 }
+
 
 function incluiPlacar() {
   stroke(255);
@@ -279,22 +282,33 @@ function escolheDificuldade() {
   botaoFacil.size(200, 60);
   botaoFacil.style('background-color', '#00FF00');
   botaoFacil.mousePressed(() => setDificuldade("facil"));
+  
+  botaoMedio = createButton('Médio');
+  botaoMedio.position(200, 220);
+  botaoMedio.size(200, 60);
+  botaoMedio.style('background-color', '#FFC107');
+  botaoMedio.mousePressed(() => setDificuldade("medio"))
+ 
 
   botaoDificil = createButton('Difícil');
-  botaoDificil.position(200, 220);
+  botaoDificil.position(200, 289);
   botaoDificil.size(200, 60);
   botaoDificil.style('background-color', '#FF0000');
   botaoDificil.mousePressed(() => setDificuldade("dificil"));
+  
 }
 
 function setDificuldade(nivel) {
   dificuldade = nivel;
-  if (dificuldade === "facil") {
+  if (dificuldade === "faci") {
     velocidadeXBolinha = 3;
     velocidadeYBolinha = 3;
-  } else {
-    velocidadeXBolinha = 9;
-    velocidadeYBolinha = 9;
+  } else if (dificuldade === "medio") {
+    velocidadeXBolinha = 6;
+    velocidadeYBolinha = 6;
+  } else if(dificuldade == "dificil"){
+    velocidadeXBolinha = 12
+    velocidadeYBolinha = 12
   }
   play = 1;
 }
@@ -318,12 +332,4 @@ function voltarParaMenu() {
   pontosDoOponente = 0;
   xBolinha = 100;
   yBolinha = 200;
-  if (dificuldade === "facil") {
-    velocidadeXBolinha = 3;
-    velocidadeYBolinha = 3;
-  } else {
-    velocidadeXBolinha = 9;
-    velocidadeYBolinha = 9;
-  }
 }
-
