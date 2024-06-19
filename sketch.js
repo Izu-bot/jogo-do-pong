@@ -1,34 +1,42 @@
-//variáveis intro
-let play=0
-let jogar
+// Declaração de variáveis
+let play = 0;
+let jogarSingle;
+let jogarMulti;
+let voltarMenu;
+let placarParaVencer;
+let modoDeJogo;
+let dificuldade;
+let botaoPlacar3;
+let botaoPlacar5;
+let botaoPlacar10;
+let botaoFacil;
+let botaoDificil;
 
-
-//variáveis da bolinha
+// Variáveis da bolinha
 let xBolinha = 100;
 let yBolinha = 200;
 let diametro = 20;
 let raio = diametro / 2;
 
-//variáveis do oponente
+// Variáveis da raquete do oponente
 let xRaqueteOponente = 585;
 let yRaqueteOponente = 150;
 
-//velocidade da bolinha
-let velocidadeXBolinha = 6;
-let velocidadeYBolinha = 6;
+// Velocidade da bolinha
+let velocidadeXBolinha;
+let velocidadeYBolinha;
 
-//variáveis da raquete
+// Variáveis da raquete do jogador
 let xRaquete = 5;
 let yRaquete = 150;
 let raqueteComprimento = 10;
 let raqueteAltura = 90;
 
-//placar do jogo
+// Placar do jogo
 let meusPontos = 0;
 let pontosDoOponente = 0;
 
-
-//sons do jogo
+// Variáveis de som
 let raquetada;
 let ponto;
 let trilha;
@@ -37,18 +45,23 @@ let colidiu = false;
 
 function setup() {
   createCanvas(600, 400);
-    trilha.loop();
+  trilha.loop(); // Inicia a música de fundo
 }
 
 function draw() {
-     background(255, 203, 219);
-   if(play>=-5){
-     removeElements(jogar)
-   }
-  if(play >=5){
-     
-  
-  mostraBolinha();
+  background(255, 203, 219); // Define a cor de fundo
+
+  if (play >= -5) {
+    removeElements(jogarSingle);
+    removeElements(jogarMulti);
+    removeElements(voltarMenu);
+    removeElements(botaoPlacar3);
+    removeElements(botaoPlacar5);
+    removeElements(botaoPlacar10);
+  }
+
+  if (play >= 5) {
+    mostraBolinha();
     movimentaBolinha();
     verificaColisaoBorda();
     mostraRaquete(xRaquete, yRaquete);
@@ -56,18 +69,27 @@ function draw() {
     verificaColisaoRaquete(xRaquete, yRaquete);
     verificaColisaoRaquete(xRaqueteOponente, yRaqueteOponente);
     mostraRaquete(xRaqueteOponente, yRaqueteOponente);
-    movimentaRaqueteOponente();
-    incluiPlacar(); 
-    mostrarmenu();
-     marcaPonto();
+    if (modoDeJogo === "multiplayer") {
+      movimentaRaqueteOponenteMultiplayer();
+    } else {
+      movimentaRaqueteOponenteSinglePlayer();
+    }
+    incluiPlacar();
     linha();
-   }
-  else {
-  intro();
+    mostraBotaoVoltar();
+    marcaPonto();
+    verificaVitoria();
+  } else if (play === 1) {
+    escolhePlacar();
+  } else if (play === 2) {
+    escolheDificuldade();
+  } else {
+    intro(); // Mostra a tela de introdução
   }
 }
+
 function mostraBolinha() {
-  circle(xBolinha, yBolinha, diametro);
+  circle(xBolinha, yBolinha, diametro); // Desenha a bolinha
 }
 
 function movimentaBolinha() {
@@ -84,110 +106,224 @@ function verificaColisaoBorda() {
   }
 }
 
-function mostraRaquete(x,y) {
-    rect(x, y, raqueteComprimento, raqueteAltura);
+function mostraRaquete(x, y) {
+  rect(x, y, raqueteComprimento, raqueteAltura); // Desenha a raquete
 }
 
 function movimentaMinhaRaquete() {
-  if(keyIsDown(UP_ARROW)) {
+  if (keyIsDown(UP_ARROW)) {
     yRaquete -= 10;
   }
-  if(keyIsDown(DOWN_ARROW)) {
+  if (keyIsDown(DOWN_ARROW)) {
     yRaquete += 10;
   }
-   if(yRaquete >= 310){
-      yRaquete -=10;
-    }
-  if(yRaquete <= 0){
-      yRaquete +=10;
-    }
-}
-
-function verificaColisaoRaquete() {
-  if (xBolinha - raio < xRaquete + raqueteComprimento && yBolinha - raio < yRaquete + raqueteAltura && yBolinha + raio > yRaquete) {
-    velocidadeXBolinha *=-1;
-     raquetada.play();
+  if (yRaquete >= 310) {
+    yRaquete -= 10;
+  }
+  if (yRaquete <= 0) {
+    yRaquete += 10;
   }
 }
 
 function verificaColisaoRaquete(x, y) {
-    colidiu = collideRectCircle(x, y, raqueteComprimento, raqueteAltura, xBolinha, yBolinha, raio);
-    if (colidiu){
-        velocidadeXBolinha *= -1;
-        raquetada.play();
+  colidiu = collideRectCircle(x, y, raqueteComprimento, raqueteAltura, xBolinha, yBolinha, raio);
+  if (colidiu) {
+    velocidadeXBolinha *= -1;
+    raquetada.play();
   }
 }
 
-function movimentaRaqueteOponente(){
-    if (keyIsDown(87)){
-        yRaqueteOponente -= 10;
-    }
-    if (keyIsDown(83)){
-        yRaqueteOponente += 10;
-    }
-    if(yRaqueteOponente >= 310){
-      yRaqueteOponente -=10;
-    }
-  if(yRaqueteOponente <= 0){
-      yRaqueteOponente +=10;
-    }
+function movimentaRaqueteOponenteMultiplayer() {
+  if (keyIsDown(87)) { // Tecla W
+    yRaqueteOponente -= 10;
+  }
+  if (keyIsDown(83)) { // Tecla S
+    yRaqueteOponente += 10;
+  }
+  if (yRaqueteOponente >= 310) {
+    yRaqueteOponente -= 10;
+  }
+  if (yRaqueteOponente <= 0) {
+    yRaqueteOponente += 10;
+  }
 }
 
+function movimentaRaqueteOponenteSinglePlayer() {
+  // Movimento automático do oponente no modo single player
+  if (yBolinha < yRaqueteOponente + raqueteAltura / 2) {
+    yRaqueteOponente -= 6;
+  } else {
+    yRaqueteOponente += 6;
+  }
+  if (yRaqueteOponente >= 310) {
+    yRaqueteOponente = 310;
+  }
+  if (yRaqueteOponente <= 0) {
+    yRaqueteOponente = 0;
+  }
+}
 
-function incluiPlacar(){
-  stroke(255)
-    textAlign(CENTER);
-    textSize(16);    
-  fill(color (255,0, 0));
+function incluiPlacar() {
+  stroke(255);
+  textAlign(CENTER);
+  textSize(16);
+  fill(color(255, 0, 0));
   rect(150, 10, 40, 20);
-    fill(0);
-    text(meusPontos, 170, 26);
-    fill(color(255,0, 0));
-    rect(450, 10, 40, 20);
-    fill(0);
-    text(pontosDoOponente, 470, 26);
-
-
-
+  fill(0);
+  text(meusPontos, 170, 26);
+  fill(color(255, 0, 0));
+  rect(450, 10, 40, 20);
+  fill(0);
+  text(pontosDoOponente, 470, 26);
 }
-
 
 function marcaPonto() {
-    if (xBolinha > 590) {
-        meusPontos += 1;
-        ponto.play();
-    }
-    if (xBolinha < 10) {
-        pontosDoOponente += 1;
-        ponto.play();
-    }
+  if (xBolinha > 590) {
+    meusPontos += 1;
+    ponto.play();
+  }
+  if (xBolinha < 10) {
+    pontosDoOponente += 1;
+    ponto.play();
+  }
 }
 
+function verificaVitoria() {
+  if (meusPontos >= placarParaVencer || pontosDoOponente >= placarParaVencer) {
+    play = 0;
+    meusPontos = 0;
+    pontosDoOponente = 0;
+    xBolinha = 100;
+    yBolinha = 200;
+    velocidadeXBolinha = 6;
+    velocidadeYBolinha = 6;
+    alert("Fim de jogo!");
+  }
+}
 
-function preload(){
+function preload() {
   trilha = loadSound("trilha.mp3");
   ponto = loadSound("ponto.mp3");
   raquetada = loadSound("raquetada.mp3");
 }
 
-function linha(){
-stroke(255);
-fill(255,15,192);
-rect(290,0,10,400)
-}
-function intro() {
-  jogar = createButton('JOGAR');
-  jogar.position(200, 260);
-  jogar.size(200, 90);
-  jogar.style('background-color', '#90FFF1'); 
-  jogar.mousePressed(jogoar);
+function linha() {
+  stroke(255);
+  fill(255, 15, 192);
+  rect(290, 0, 10, 400); // Linha divisória do campo
 }
 
-function jogoar(){
-  play +=10
-  
+function intro() {
+  textAlign(CENTER);
+  textSize(32);
+  fill(0);
+  text("Jogo do Pong", width / 2, 100);
+  textSize(18);
+  text("by Leonardo 2A", width / 2, 130);
+
+  jogarSingle = createButton('Single Player');
+  jogarSingle.position(200, 180);
+  jogarSingle.size(200, 90);
+  jogarSingle.style('background-color', '#90FFF1');
+  jogarSingle.mousePressed(() => escolheModo("singleplayer"));
+
+  jogarMulti = createButton('Multiplayer');
+  jogarMulti.position(200, 300);
+  jogarMulti.size(200, 90);
+  jogarMulti.style('background-color', '#90FFF1');
+  jogarMulti.mousePressed(() => escolheModo("multiplayer"));
 }
-function mostrarmenu(){
-  if (keyIsDown(8)){
-    play -=10
-  }}
+
+function escolheModo(mode) {
+  modoDeJogo = mode;
+  if (modoDeJogo === "singleplayer") {
+    play = 2;
+  } else {
+    play = 1;
+  }
+}
+
+function escolhePlacar() {
+  textAlign(CENTER);
+  textSize(24);
+  fill(0);
+  text("Escolha o placar para vencer", width / 2, 100);
+
+  botaoPlacar3 = createButton('3 Pontos');
+  botaoPlacar3.position(200, 150);
+  botaoPlacar3.size(200, 60);
+  botaoPlacar3.style('background-color', '#FFCC00');
+  botaoPlacar3.mousePressed(() => startGame(3));
+
+  botaoPlacar5 = createButton('5 Pontos');
+  botaoPlacar5.position(200, 220);
+  botaoPlacar5.size(200, 60);
+  botaoPlacar5.style('background-color', '#FFCC00');
+  botaoPlacar5.mousePressed(() => startGame(5));
+
+  botaoPlacar10 = createButton('10 Pontos');
+  botaoPlacar10.position(200, 290);
+  botaoPlacar10.size(200, 60);
+  botaoPlacar10.style('background-color', '#FFCC00');
+  botaoPlacar10.mousePressed(() => startGame(10));
+}
+
+function escolheDificuldade() {
+  textAlign(CENTER);
+  textSize(24);
+  fill(0);
+  text("Escolha a dificuldade", width / 2, 100);
+
+  botaoFacil = createButton('Fácil');
+  botaoFacil.position(200, 150);
+  botaoFacil.size(200, 60);
+  botaoFacil.style('background-color', '#00FF00');
+  botaoFacil.mousePressed(() => setDificuldade("facil"));
+
+  botaoDificil = createButton('Difícil');
+  botaoDificil.position(200, 220);
+  botaoDificil.size(200, 60);
+  botaoDificil.style('background-color', '#FF0000');
+  botaoDificil.mousePressed(() => setDificuldade("dificil"));
+}
+
+function setDificuldade(nivel) {
+  dificuldade = nivel;
+  if (dificuldade === "facil") {
+    velocidadeXBolinha = 3;
+    velocidadeYBolinha = 3;
+  } else {
+    velocidadeXBolinha = 9;
+    velocidadeYBolinha = 9;
+  }
+  play = 1;
+}
+
+function startGame(placar) {
+  placarParaVencer = placar;
+  play += 10;
+}
+
+function mostraBotaoVoltar() {
+  voltarMenu = createButton('Voltar');
+  voltarMenu.position(277, 10);
+  voltarMenu.size(50, 40);
+  voltarMenu.style('background-color', '#FF5733');
+  voltarMenu.mousePressed(voltarParaMenu);
+}
+
+function voltarParaMenu() {
+  play = 0;
+  meusPontos = 0;
+  pontosDoOponente = 0;
+  xBolinha = 100;
+  yBolinha = 200;
+  if (dificuldade === "facil") {
+    velocidadeXBolinha = 3;
+    velocidadeYBolinha = 3;
+  } else {
+    velocidadeXBolinha = 9;
+    velocidadeYBolinha = 9;
+  }
+}
+
